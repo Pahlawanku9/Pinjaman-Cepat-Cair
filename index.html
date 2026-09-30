@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pinjaman Online</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif}
+html{height:100%;overflow:hidden;overscroll-behavior:none}
+body{background:#fff;height:100dvh;width:100%;overflow:hidden;position:relative}
+.header{background:#f94c61;padding:14px 18px 20px;border-radius:0 0 26px 26px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:10;position:relative}
+.header-left{display:flex;align-items:center;gap:12px}
+.avatar{width:58px;height:58px;border-radius:50%;border:3px solid #fff;background:#fff;object-fit:cover}
+.header h1{color:#fff;font-size:18px;font-style:italic;font-weight:900}
+.hamburger{width:44px;height:42px;background:#fff;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer}
+.hamburger span{width:22px;height:3px;background:#f94c61;border-radius:10px;display:block}
+.container{max-width:430px;margin:auto;padding:0 14px;height:calc(100dvh - 86px);overflow:hidden;display:flex;flex-direction:column}
+.banner{display:flex;gap:10px;justify-content:center;padding:10px 0;flex-shrink:0}
+.banner img{width:86px;height:48px;border-radius:12px;background:#ffe4e6;object-fit:cover}
+.title{text-align:center;font-size:22px;font-weight:900;margin:2px 0 8px}
+.card{background:#fff;border-radius:22px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.08);overflow:hidden;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.row{display:flex;justify-content:space-between;font-size:13px}.gray{color:#6b7280}.bold{font-weight:800;font-size:14px}
+input[type=range]{-webkit-appearance:none;width:100%;height:12px;background:#ffe4e6;border-radius:10px;margin:14px 0 4px;touch-action:pan-x}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;background:#f94c61;border-radius:50%;border:4px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.minmax{display:flex;justify-content:space-between;color:#9ca3af;font-size:10px;margin-bottom:10px}
+.mid{text-align:center;margin:6px 0}.sub{font-size:11px;color:#6b7280}.big{font-size:36px;font-weight:900}
+.result{background:#fef2f2;border-radius:16px;padding:10px 12px;margin-top:8px}
+.result-row{display:flex;justify-content:space-between;padding:6px 0;font-size:12px}.result-row.total{border-top:1px solid #fecaca;font-weight:800;color:#be123c}
+.btn{width:100%;background:#f94c61;color:#fff;border:none;padding:14px;border-radius:28px;font-size:15px;font-weight:800;margin-top:10px;cursor:pointer;box-shadow:0 6px 18px rgba(249,76,97,.35)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:99;padding:16px}.overlay.show{display:flex}
+.popup{background:#fff;width:100%;max-width:380px;border-radius:24px;padding:18px}
+.form-group{margin-bottom:12px}.form-group label{font-size:14px;font-weight:800;display:block;margin-bottom:6px}
+.form-group input{width:100%;padding:12px 14px;border:1.5px solid #ffd1d6;border-radius:12px;background:#fff8f8;outline:none}
+.hidden{display:none!important}
+.upload-box{width:100%;height:140px;border:2px dashed #ffc2c8;border-radius:18px;display:flex;align-items:center;justify-content:center;background:#fff8f8;cursor:pointer;overflow:hidden}
+.upload-box img{width:100%;height:100%;object-fit:cover;display:none}.cam-icon{width:60px}
+.input-group{position:relative;margin-bottom:14px}
+.input-group label{position:absolute;top:-8px;left:16px;background:#fff;padding:0 6px;font-size:11px;color:#f94c61;font-weight:700}
+.input-group input,.input-group select{width:100%;padding:12px 14px;border:1.5px solid #fecdd3;border-radius:14px;background:#fff8f8;outline:none;font-size:13px}
+.menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:200}.menu-overlay.show{display:block}
+.menu-panel{position:fixed;top:0;right:-320px;width:300px;height:100dvh;background:#fff;z-index:201;transition:.32s ease;box-shadow:-8px 0 24px rgba(0,0,0,.18);padding:22px 18px;display:flex;flex-direction:column}
+.menu-panel.show{right:0}
+.menu-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.menu-head b{color:#f94c61;font-size:18px;font-weight:800}
+.menu-close{width:36px;height:36px;background:#fff0f2;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#f94c61;font-weight:900;cursor:pointer}
+.menu-item{padding:14px 12px;border-radius:14px;display:flex;align-items:center;gap:14px;font-size:15px;font-weight:600;color:#1f2937;cursor:pointer;margin-bottom:4px}
+.menu-item.icon-box{width:38px;height:38px;background:#ffe1e6;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.menu-item.active{background:#fff0f2;color:#f94c61}
+.menu-footer{margin-top:auto;padding-top:18px;border-top:1px solid #f3f4f6;text-align:center;font-size:11px;color:#9ca3af}
+#page2,#page3,#page4{height:calc(100dvh - 86px);overflow:hidden}
+.top-info{margin:12px 16px;background:#ffe1e6;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;gap:12px}
+.top-info p{font-size:12px;color:#be123c;line-height:1.5}
+.card-bank{margin:0 16px;background:#fff;border-radius:20px;padding:4px 18px;box-shadow:0 4px 20px rgba(249,76,97,.08)}
+.row-bank{padding:18px 0;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center}
+.label-bank{font-size:14px;font-weight:700}
+.input-bank{border:none;outline:none;text-align:right;font-size:14px;width:60%;background:transparent}
+.select-bank{font-size:14px;color:#9ca3af;cursor:pointer}
+.overlay-bank{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;z-index:100}.overlay-bank.show{display:flex}
+.sheet-bank{background:#fff;width:100%;border-radius:24px 24px 0 0;max-height:70dvh;overflow:auto;padding:12px}
+.bank-item{padding:14px 12px;border-bottom:1px solid #f3f4f6;font-size:14px;display:flex;justify-content:space-between;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left"><img src="img/1.png" class="avatar"><h1>PINJAMAN ONLINE</h1></div>
+  <div class="hamburger" onclick="openMenu()"><span></span><span></span><span></span></div>
+</div>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head"><b>Menu</b><div class="menu-close" onclick="closeMenu()">✕</div></div>
+  <div class="menu-item active" onclick="goBeranda()"><div class="icon-box">🏠</div> Beranda</div>
+<a href="tentang.html" class="menu-item">
+  <div class="icon-box">📄</div>
+  <span>Tentang Kami</span>
+</a>
+  <div class="menu-item" onclick="goSimulasi()"><div class="icon-box">💰</div> Simulasi Pinjaman</div>
+  <div class="menu-item" onclick="goBantuan()"><div class="icon-box">❓</div> Bantuan</div>
+  <div class="menu-item" onclick="goHubungi()"><div class="icon-box">📞</div> Hubungi Kami</div>
+  <div class="menu-footer">© 2026 Pinjaman Online<br>Terdaftar & Diawasi OJK</div>
+</div>
+
+<!-- PAGE 1 SIMULASI -->
+<div class="container" id="page1">
+  <div class="banner"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7el_raE_VnqUCBhc9PtEvuVg6xIp45qj8Y1JOWhathtKtkGXN1TdFds8&s=01"><img src="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/062016/untitled-1_149.png?itok=1urztpVo"></div>
+  <div class="title">Simulasi Pinjaman</div>
+  <div class="card">
+    <div>
+      <div class="row"><span class="gray">Jumlah Pinjaman (Rp)</span><span class="bold" id="amountText">15.000.000</span></div>
+      <input type="range" id="amount" min="500000" max="100000000" step="500000" value="15000000">
+      <div class="minmax"><span>500.000</span><span>100.000.000</span></div>
+      <div class="row"><span class="gray">Lama Pinjaman</span><span class="bold" id="tenorText">1 Bulan</span></div>
+      <input type="range" id="tenorRange" min="1" max="12" value="1">
+      <div class="minmax"><span>1 Bulan</span><span>12 Bulan</span></div>
+      <div class="mid"><b>Jumlah Cicilan per bulan (Rp)</b><div class="sub">Termasuk Bunga dan Biaya Lain</div><div class="big" id="monthlyResult">15.135.000</div></div>
+      <div class="result">
+        <div class="result-row"><span>Jumlah pinjaman</span><strong id="loanResult">Rp 15.000.000</strong></div>
+        <div class="result-row"><span>Tenor</span><strong id="tenorResult">1 Bulan</strong></div>
+        <div class="result-row"><span>Bunga total</span><strong id="interestTotal">Rp 135.000</strong></div>
+        <div class="result-row total"><span>Total</span><strong id="totalResult">Rp 15.135.000</strong></div>
+      </div>
+    </div>
+    <button class="btn" onclick="openPopup()">Ajukan Sekarang</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <div class="form-group"><label>Nama Lengkap</label><input type="text" id="namaLengkap" placeholder="Nama lengkap"></div>
+    <div class="form-group"><label>Nomor HP</label><input type="tel" id="noHP" placeholder="08xxxxxxxxxxx"></div>
+    <div class="form-group"><label>Alamat Email</label><input type="email" id="emailAddr" placeholder="email@gmail.com"></div>
+    <button class="btn" onclick="submitApplication()">Daftar Pengajuan</button>
+  </div>
+</div>
+
+<!-- PAGE 2 KTP -->
+<div class="container hidden" id="page2">
+  <div class="upload-box" onclick="document.getElementById('file').click()">
+    <svg class="cam-icon" id="camIcon" viewBox="0 0 24 24" fill="#f94c61"><path d="M9 3L7 5H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V7a2 2 0 00-2-2h-3l-2-2H9zm3 15a5 5 0 110-10 5 5 0 010 10zm0-2a3 3 0 100-6 3 3 0 000 6z"/></svg>
+    <img id="preview"><input type="file" id="file" accept="image/*" hidden>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <div>
+      <div class="input-group"><label>Nama Pemohon</label><input type="text" id="namaPemohon"></div>
+      <div class="input-group"><label>Tanggal Lahir</label><input type="date" id="tglLahir"></div>
+      <div class="input-group"><label>No Telpon Rumah</label><input type="tel" id="noTelp"></div>
+      <div class="input-group"><label>Gender</label><select id="gender"><option value="">Pilih gender</option><option>Laki-laki</option><option>Perempuan</option></select></div>
+      <div class="input-group"><label>Agama</label><input type="text" id="agama"></div>
+    </div>
+    <button class="btn" onclick="goToRekening()">Simpan & Lanjutkan</button>
+  </div>
+</div>
+
+<!-- PAGE 3 REKENING MERAH MUDA -->
+<div class="container hidden" id="page3">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 10px"><span style="font-size:22px" onclick="backTo2()">‹</span><b>Tambahkan Nomor Rekening</b><span>🎧</span></div>
+  <div class="top-info"><p>Nama peminjam dan nama pemilik rekening harus sama. Jangan pakai kartu kredit.</p><img src="https://cdn-icons-png.flaticon.com/512/6963/6963703.png" style="width:56px"></div>
+  <div class="card-bank">
+    <label class="row-bank"><span class="label-bank">Nama</span><input class="input-bank" id="namaRek" placeholder="Silakan masukkan"></label>
+    <div class="row-bank" onclick="openBank()"><span class="label-bank">Nama Bank</span><span class="select-bank" id="bankText">Silakan Pilih ›</span></div>
+    <label class="row-bank"><span class="label-bank">Nomor Rekening</span><input class="input-bank" id="norek" type="number" placeholder="Silakan masukkan"></label>
+  </div>
+  <div style="margin-top:auto;padding:12px 16px"><div style="text-align:center;font-size:11px;color:#6b7280;margin-bottom:10px">🛡️ Kredione melindungi keamanan informasi Anda</div><button class="btn" onclick="goToLimit()">Lanjutkan</button></div>
+</div>
+
+<!-- PAGE 4 LIMIT MERAH MUDA -->
+<div class="container hidden" id="page4" style="background:#f5f5f7">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between"><div><div style="font-size:13px;color:#6b7280">Limit tersedia</div><div style="font-size:22px;font-weight:900">Rp12.350.000</div></div><button class="btn" style="width:auto;padding:10px 22px;border-radius:20px" onclick="alert('Pencairan diproses')">Cairkan</button></div>
+    <div style="font-size:12px;color:#6b7280;margin-top:8px">Tenor hingga 12 bulan</div>
+  </div>
+  <div style="background:linear-gradient(90deg,#fff0f2,#ffe1e6);border-radius:16px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border:1px solid #ffd1d6;margin-bottom:12px"><div style="display:flex;gap:10px;align-items:center"><div style="width:36px;height:36px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center">💰</div><div><b style="font-size:13px">Dapatkan pinjaman lebih!</b><div style="font-size:11px;color:#6b7280">Cukup upload beberapa dokumen</div></div></div><div style="width:32px;height:32px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#f94c61;font-weight:900">→</div></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px"><div><b>Pinjaman aktif</b><small style="display:block;font-size:11px;color:#6b7280">2 pinjaman</small></div><div style="font-size:12px;font-weight:700;border:1px solid #f3f4f6;padding:6px 12px;border-radius:20px">Lihat semua <span style="color:#f94c61">→</span></div></div>
+    <div class="result-row"><span>Jatuh tempo terdekat</span><strong>1 Juli 2023</strong></div>
+    <div class="result-row"><span>Sisa cicilan berjalan</span><strong>Rp2.060.000</strong></div>
+    <div class="result-row total"><span>Total</span><strong>Rp2.060.000</strong></div>
+    <button class="btn" style="background:#fff;color:#f94c61;border:1.5px solid #f94c61" onclick="alert('Bayar Rp2.060.000')">Bayar</button>
+  </div>
+</div>
+
+<div class="overlay-bank" id="overlayBank" onclick="if(event.target==this)this.classList.remove('show')"><div class="sheet-bank"><b style="display:block;padding:10px 6px">Pilih Bank</b><div class="bank-item" onclick="pickBank('BCA')">BCA <span>›</span></div><div class="bank-item" onclick="pickBank('BRI')">BRI <span>›</span></div><div class="bank-item" onclick="pickBank('BNI')">BNI <span>›</span></div><div class="bank-item" onclick="pickBank('MANDIRI')">MANDIRI <span>›</span></div><div class="bank-item" onclick="pickBank('DANA')">DANA <span>›</span></div><div class="bank-item" onclick="pickBank('GOPAY')">GOPAY <span>›</span></div></div></div>
+
+<script>
+const amt=document.getElementById('amount'),ten=document.getElementById('tenorRange');
+function upd(){const loan=+amt.value,t=+ten.value,bunga=Math.round(loan*0.009*t),tot=loan+bunga,per=Math.ceil(tot/t);amountText.innerText=loan.toLocaleString('id-ID');tenorText.innerText=t+' Bulan';monthlyResult.innerText=per.toLocaleString('id-ID');loanResult.innerText='Rp '+loan.toLocaleString('id-ID');tenorResult.innerText=t+' Bulan';interestTotal.innerText='Rp '+bunga.toLocaleString('id-ID');totalResult.innerText='Rp '+tot.toLocaleString('id-ID');window._dataLoan={loan,t}}
+amt.addEventListener('input',upd);ten.addEventListener('input',upd);upd();
+function openMenu(){menuPanel.classList.add('show');menuOverlay.classList.add('show')}
+function closeMenu(){menuPanel.classList.remove('show');menuOverlay.classList.remove('show')}
+function goBeranda(){closeMenu();page1.classList.remove('hidden');page2.classList.add('hidden');page3.classList.add('hidden');page4.classList.add('hidden')}
+function goSimulasi(){closeMenu();goBeranda();document.getElementById('amount').scrollIntoView()}
+function goTentang(){closeMenu();alert('Tentang Kami: Pinjaman Online terdaftar OJK, bunga rendah, proses cepat.')}
+function goBantuan(){closeMenu();alert('Bantuan: Hubungi CS 08xxxxxxxxxx')}
+function goHubungi(){closeMenu();window.open('https://wa.me/6281234567890','_blank')}
+function openPopup(){overlay.classList.add('show')}
+overlay.addEventListener('click',e=>{if(e.target.id=='overlay')e.target.classList.remove('show')})
+function submitApplication(){
+  const nama=namaLengkap.value.trim(),hp=noHP.value.trim();
+  if(nama.length<3||hp.length<10){alert('Lengkapi data');return}
+  page1.classList.add('hidden');overlay.classList.remove('show');page2.classList.remove('hidden');namaPemohon.value=nama;namaRek.value=nama;
+}
+file.onchange=e=>{const f=e.target.files[0];if(!f)return;preview.src=URL.createObjectURL(f);preview.style.display='block';camIcon.style.display='none';}
+function goToRekening(){if(!namaPemohon.value.trim()){alert('Nama wajib');return}page2.classList.add('hidden');page3.classList.remove('hidden')}
+function backTo2(){page3.classList.add('hidden');page2.classList.remove('hidden')}
+function openBank(){overlayBank.classList.add('show')}
+function pickBank(n){bankText.innerText=n;bankText.style.color='#111';bankText.style.fontWeight='700';overlayBank.classList.remove('show')}
+function goToLimit(){if(!norek.value.trim()||bankText.innerText.includes('Pilih')){alert('Lengkapi rekening');return}page3.classList.add('hidden');page4.classList.remove('hidden')}
+</script>
+</body>
+  </html>
